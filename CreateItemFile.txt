@@ -1,0 +1,58 @@
+import java.util.*;
+import java.io.*;
+
+public class CreateItemFile {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        HashMap<Integer, String> itemMap = new HashMap<Integer, String>();
+
+        try {
+            File file = new File("items.txt");
+            if (file.createNewFile()) {
+                System.out.println("New file created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+            FileWriter write = new FileWriter(file);
+
+            while (true) {
+                System.out.print("Enter item number (3 digits): ");
+                int itemNumber = sc.nextInt();
+                sc.nextLine();
+
+                if (itemNumber < 100 || itemNumber > 999) {
+                    System.out.println("Invalid item number. Please enter a 3-digit number.");
+                    continue;
+                }
+
+                System.out.print("Enter item description (up to 20 characters): ");
+                String itemDescription = sc.nextLine();
+
+                if (itemDescription.length() > 20) {
+                    System.out.println("Item description is too long. Please enter a description with up to 20 characters.");
+                    continue;
+                }
+
+                if (itemMap.containsKey(itemNumber)) {
+                    System.out.println("Item number already exists. Please enter a unique item number.");
+                    continue;
+                }
+
+                itemMap.put(itemNumber, itemDescription);
+                write.write(itemNumber + " " + itemDescription + "\n");
+
+                System.out.print("Add another item? (Y/N): ");
+                String choice = sc.nextLine();
+                if (choice.equalsIgnoreCase("N")) {
+                    break;
+                }
+            }
+
+            write.close();
+            sc.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+}
