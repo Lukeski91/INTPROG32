@@ -1,0 +1,101 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class CreateCustomerFile {
+    public static void main(String[] args) {
+        String fileName = "customer_file.txt";
+        File file = new File(fileName);
+
+        // -- Create the file if it does not exist --
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                System.out.println("Error creating the file: " + ex.getMessage());
+                return;
+            }
+        }
+
+        try {
+            FileWriter write = new FileWriter(file);
+
+            // -- Prompt the user for customer information --
+            Scanner sc = new Scanner(System.in);
+            String custID, lastName, zipCode;
+
+            while (true) {
+                System.out.print("Enter customer ID number (3 digits): ");
+                custID = sc.nextLine();
+
+                if (custID.length() != 3) {
+                    System.out.println("Customer ID number must be 3 digits long.");
+                    continue;
+                }
+
+                if (containscustID(file, custID)) {
+                    System.out.println("Customer ID number already exists.");
+                    continue;
+                }
+
+                System.out.print("Enter customer last name (6 characters): ");
+                lastName = sc.nextLine();
+                lastName = padRight(lastName, 6);
+
+                if (lastName.length() != 6) {
+                    System.out.println("Last name must be 6 characters long.");
+                    continue;
+                }
+
+                System.out.print("Enter customer ZIP code (5 digits): ");
+                zipCode = sc.nextLine();
+
+                if (zipCode.length() != 5) {
+                    System.out.println("Customer ZIP code must be 5 digits long.");
+                    continue;
+                }
+
+                // -- Write customer information to the file --
+                write.write(custID + " " + lastName + " " + zipCode + "\n");
+                write.flush();
+
+                System.out.print("Do you want to add another customer? (y/n) ");
+                String choice = sc.nextLine();
+
+                if (choice.equalsIgnoreCase("n")) {
+                    break;
+                }
+            }
+
+            write.close();
+            sc.close();
+        } catch (IOException ex) {
+            System.out.println("Error writing to file: " + ex.getMessage());
+            return;
+        }
+    }
+
+    // -- Method to check if the file already contains a customer with the given custID --
+    private static boolean containscustID(File file, String custID) throws IOException {
+        Scanner sc = new Scanner(file);
+
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            String[] parts = line.split(" ");
+
+            if (parts[0].equals(custID)) {
+                sc.close();
+                return true;
+            }
+        }
+
+        sc.close();
+        return false;
+    }
+
+    // -- Method to pad a string with spaces on the right -- 
+    private static String padRight(String s, int n) {
+        return String.format("%-" + n + "s", s);
+    }
+}
