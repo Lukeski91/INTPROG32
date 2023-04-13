@@ -1,0 +1,49 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class CustomerItemOrder {
+    
+    // -- define customer and item files --
+    private static HashMap<Integer, String> customers = new HashMap<>();
+    private static HashMap<String, Double> items = new HashMap<>();
+    
+    // -- initialize customer and item files --
+    static {
+        customers.put(69, "Akehide Tecson");
+        customers.put(15, "Luke Juntilla");
+        customers.put(103, "Car");
+        
+        items.put("RAM", 10.5);
+        items.put("Perfume", 12.25);
+        items.put("Fuel", 299.75);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // -- prompt the user to enter customer number and item --
+        System.out.print("Enter customer number: ");
+        int customerNumber = scanner.nextInt();
+        System.out.print("Enter item: ");
+        String item = scanner.next();
+
+        // -- check if the customer number exists --
+        if (!customers.containsKey(customerNumber)) {
+            System.out.println("ERROR!!! : Customer number does not exist");
+        }
+        // -- check if the item exists --
+        else if (!items.containsKey(item)) {
+            System.out.println("ERROR!!! : Item does not exist");
+        }
+        // -- display customer and item information --
+        else {
+            String customerName = customers.get(customerNumber);
+            double itemPrice = items.get(item);
+            System.out.println("Customer: " + customerName);
+            System.out.println("Item: " + item);
+            System.out.println("Price: " + itemPrice);
+        }
+
+        scanner.close();
+    }
+}
